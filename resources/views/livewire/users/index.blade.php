@@ -44,6 +44,7 @@ new class extends Component {
     public function headers(): array
     {
         return [
+            ['key' => 'avatar', 'label' => '', 'class' => 'w-1'],
             ['key' => 'id', 'label' => '#', 'class' => 'w-1'],
             ['key' => 'name', 'label' => 'Name', 'class' => 'w-64'],
             ['key' => 'country_name', 'label' => 'country', 'class' => 'lg:table-cell'],
@@ -104,6 +105,7 @@ new class extends Component {
                     <x-badge value="1" class="bg-orange-600 text-white" />
                 @endif
             </x-button>
+            <x-button label="Create" link="/users/create" responsive icon="o-plus" class="btn-primary" />
         </x-slot:actions>
     </x-header>
 
@@ -112,10 +114,13 @@ new class extends Component {
 
 
 
-        <x-table :headers="$headers" :rows="$users" :sort-by="$sortBy" with-pagination>
+        <x-table :headers="$headers" :rows="$users" :sort-by="$sortBy" with-pagination link="users/{id}/edit?name={name}&city={city.name}">
             @scope('actions', $user)
                 <x-button icon="o-trash" wire:click="delete({{ $user['id'] }})" wire:confirm="Are you sure?" spinner
                     class="btn-ghost btn-sm text-red-500" />
+            @endscope
+            @scope('cell_avatar', $user)
+                <x-avatar image="{{ $user->avatar ?? '/empty-user.jpg' }}" class="!w-10" />
             @endscope
         </x-table>
     </x-card>
